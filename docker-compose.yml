@@ -1,0 +1,29 @@
+version: "3"
+
+networks:
+  mongodb_net:
+    driver: bridge
+
+services:
+  mongodb:
+    image: 'mongo'
+    container_name: 'house-browser-db'
+    environment:
+      - MONGO_INITDB_DATABASE=house-browser
+      - MONGO_INITDB_ROOT_USERNAME=estatesAdmin
+      - MONGO_INITDB_ROOT_PASSWORD=estatesPass
+    volumes:
+      - ./common/dbinit:/docker-entrypoint-initdb.d
+      - ./mongo-volume:/data/db
+    ports:
+      - 27017:27017
+  mongoclient:
+    image: mongoclient/mongoclient:latest
+    container_name: mongoclient
+    hostname: mongoclient
+    depends_on:
+      - mongodb
+    networks:
+      - mongodb_net
+    ports:
+      - 3300:3000
