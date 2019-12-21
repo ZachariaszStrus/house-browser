@@ -1,19 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ApolloProvider } from '@apollo/react-components';
+import { ThemeProvider } from 'styled-components';
+import mainTheme from './src/styles/theme/main.theme';
+import AppNavigation from './src/navigation/AppNavigation';
+import apolloClient from './src/services/apollo-client';
 
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    <ApolloProvider client={apolloClient}>
+      <ThemeProvider theme={mainTheme}>
+        <AppNavigation />
+      </ThemeProvider>
+    </ApolloProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;

@@ -5,7 +5,33 @@
 
 type Estate {
   id: ID!
-  name: String!
+  title: String!
+  price: Int!
+  squareMeters: Int!
+  bedrooms: Int!
+  bathrooms: Int!
+  image: String!
+}
+
+input EstateInput {
+  title: String!
+  price: Int!
+  squareMeters: Int!
+  bedrooms: Int!
+  bathrooms: Int!
+  image: String!
+  location: EstateLocation!
+}
+
+input EstateLocation {
+  latitude: Float!
+  longitude: Float!
+}
+
+type Mutation {
+  createEstate(input: EstateInput!): Estate!
+  updateEstate(input: EstateInput!, id: String!): Estate!
+  deleteEstate(id: String!): Estate!
 }
 
 type Query {

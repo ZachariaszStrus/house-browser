@@ -10,8 +10,3 @@ db.createUser(
     ]
   }
 );
-
-db.estates.insert({
-  _id: ObjectId(7df78ad8902c),
-  name: 'test'
-})

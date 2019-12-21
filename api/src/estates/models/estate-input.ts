@@ -1,11 +1,8 @@
-import {Field, ID, Int, ObjectType} from 'type-graphql';
+import {Field, InputType, Int} from 'type-graphql';
 import {EstateLocation} from "./estate-location";
 
-@ObjectType()
-export class Estate {
-
-  @Field(type => ID)
-  readonly id?: string;
+@InputType()
+export class EstateInput {
 
   @Field(type => String)
   readonly title: string;
@@ -24,4 +21,7 @@ export class Estate {
 
   @Field(type => String)
   readonly image: string;
+
+  @Field(type => EstateLocation)
+  readonly location: EstateLocation;
 }
