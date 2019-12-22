@@ -11,14 +11,15 @@ import {
   faCheckSquare
 } from '@fortawesome/free-solid-svg-icons';
 
-const MAX_IMAGE_HEIGHT = Dimensions.get('screen').width;
+const IMAGE_PLACEHOLDER = require('../../../../assets/photo-placeholder.png');
+const SCREEN = Dimensions.get('screen');
 
 interface OwnProps {
   estate: Estate;
 }
 
 const ListItem: FunctionComponent<OwnProps> = ({ estate }) => {
-  const [imageRatio, setImageRatio] = useState(1);
+  const [imageRatio, setImageRatio] = useState<number | null>(null);
 
   useEffect(() => {
     Image.getSize(
@@ -35,23 +36,30 @@ const ListItem: FunctionComponent<OwnProps> = ({ estate }) => {
   ]);
 
   const imageStyle = useMemo<StyleProp<ImageStyle>>(
-    () => ({
-      width: '100%',
-      minHeight: 100,
-      maxHeight: MAX_IMAGE_HEIGHT,
-      aspectRatio: imageRatio
-    }),
+    () =>
+      imageRatio
+        ? {
+            width: '100%',
+            minHeight: 100,
+            maxHeight: SCREEN.width,
+            aspectRatio: imageRatio || 1
+          }
+        : {
+            width: SCREEN.width,
+            height: SCREEN.width / 2
+          },
     [imageRatio]
+  );
+
+  const imageSource = useMemo(
+    () => (imageRatio ? { uri: estate.image } : IMAGE_PLACEHOLDER),
+    [estate.image, imageRatio]
   );
 
   return (
     <Container>
       <ImageContainer>
-        <Image
-          style={imageStyle}
-          source={{ uri: estate.image }}
-          resizeMode={'stretch'}
-        />
+        <Image style={imageStyle} source={imageSource} />
         <PriceContainer>
           <PriceText
             fontSize={'TITLE_LARGE'}

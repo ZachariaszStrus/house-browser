@@ -32,6 +32,7 @@ type Mutation {
   createEstate(input: EstateInput!): Estate!
   updateEstate(input: EstateInput!, id: String!): Estate!
   deleteEstate(id: String!): Estate!
+  populateEstates(count: Float!): Float!
 }
 
 type Query {

@@ -24,8 +24,8 @@ const Container = styled.View`
   display: flex;
   justify-content: center;
   background-color: ${themedColor('WHITE')};
-  height: 60px;
-  padding-left: 15px;
+  padding-top: 20px;
+  align-items: center;
 `;
 
 export default React.memo(Header);

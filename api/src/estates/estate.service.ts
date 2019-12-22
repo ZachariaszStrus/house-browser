@@ -8,11 +8,11 @@ import { Estate } from './models/estate';
 @Injectable()
 export class EstateService {
   constructor(
-    @InjectModel('Estate') private readonly estateModel: Model<IEstate>
+    @InjectModel('Estate') private readonly estateModel: Model<IEstate>,
   ) {}
 
-  async create(createCatDto: EstateInput): Promise<Estate> {
-    const createdEstate = new this.estateModel(createCatDto);
+  async create(estates: EstateInput): Promise<Estate> {
+    const createdEstate = new this.estateModel(estates);
     return await createdEstate.save();
   }
 
@@ -26,5 +26,15 @@ export class EstateService {
 
   async update(id: string, item: EstateInput): Promise<Estate> {
     return this.estateModel.findByIdAndUpdate(id, item, { new: true });
+  }
+
+  async deleteAll(): Promise<number> {
+    const result = await this.estateModel.remove({});
+    return result.deletedCount;
+  }
+
+  async createAll(estates: EstateInput[]): Promise<number> {
+    const result = await this.estateModel.create(estates);
+    return result.length;
   }
 }
