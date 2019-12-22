@@ -1,97 +1,122 @@
-import { Dimensions } from 'react-native';
-import React, { FunctionComponent, useMemo } from 'react';
-import { Event, EventImage } from '../../../store/events/models';
+import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components/native';
 import Typography from '../../shared/Typography';
-import Margin from '../../shared/Margin';
+import { Estate } from '../../../../../api/src/estates/models/estate';
+import { Dimensions, Image, ImageStyle, StyleProp } from 'react-native';
+import themedColor from '../../../styles/theme/themedColor';
+import InfoItem from './InfoItem/InfoItem';
+import {
+  faBath,
+  faBed,
+  faCheckSquare
+} from '@fortawesome/free-solid-svg-icons';
 
-const SCREEN_WIDTH = Dimensions.get('screen').width;
-const MARGIN = 15;
+const MAX_IMAGE_HEIGHT = Dimensions.get('screen').width;
 
 interface OwnProps {
-  expanded: boolean;
-  event: Event;
+  estate: Estate;
 }
 
-const ListItem: FunctionComponent<OwnProps> = ({ expanded, event }) => {
-  const primaryClassification = useMemo(
-    () =>
-      event.classifications.find((classification) => classification.primary),
-    [event.classifications]
-  );
+const ListItem: FunctionComponent<OwnProps> = ({ estate }) => {
+  const [imageRatio, setImageRatio] = useState(1);
 
-  const firstImage = useMemo(
-    () => (event.images.length > 0 ? event.images[0] : null),
-    [event.images]
+  useEffect(() => {
+    Image.getSize(
+      estate.image,
+      (srcWidth, srcHeight) => {
+        setImageRatio(srcWidth / srcHeight);
+      },
+      () => {}
+    );
+  }, [estate.image]);
+
+  const pricePerSqm = useMemo(() => estate.price / estate.price, [
+    estate.price
+  ]);
+
+  const imageStyle = useMemo<StyleProp<ImageStyle>>(
+    () => ({
+      width: '100%',
+      minHeight: 100,
+      maxHeight: MAX_IMAGE_HEIGHT,
+      aspectRatio: imageRatio
+    }),
+    [imageRatio]
   );
 
   return (
-    <Container expanded={expanded}>
-      <LeftContainer expanded={expanded}>
-        {firstImage && (
-          <StyledImage
-            image={firstImage}
-            expanded={expanded}
-            source={{ uri: firstImage.url }}
-          />
-        )}
-      </LeftContainer>
-      <RightContainer>
-        <Typography fontSize={'TITLE'} color={'PRIMARY_TEXT'}>
-          {event.name}
-        </Typography>
-        <Margin sizeTop={'5px'}>
-          <Typography fontSize={'SUBTITLE'} color={'SECONDARY_TEXT'}>
-            {event.type}
-            {' - '}
-            {primaryClassification && primaryClassification.genre
-              ? primaryClassification.genre.name
-              : ''}
-            {' - '}
-            {primaryClassification && primaryClassification.subGenre
-              ? primaryClassification.subGenre.name
-              : ''}
-          </Typography>
-        </Margin>
-        <Margin sizeTop={'5px'}>
-          <Typography fontSize={'SUBTITLE'} color={'SECONDARY_TEXT'}>
-            {event.dates.start.localDate}
-          </Typography>
-        </Margin>
-      </RightContainer>
+    <Container>
+      <ImageContainer>
+        <Image
+          style={imageStyle}
+          source={{ uri: estate.image }}
+          resizeMode={'stretch'}
+        />
+        <PriceContainer>
+          <PriceText
+            fontSize={'TITLE_LARGE'}
+            color={'WHITE'}>{`${estate.price} €`}</PriceText>
+          <PriceText
+            fontSize={'TITLE_LARGE'}
+            color={'WHITE'}>{` / `}</PriceText>
+          <Typography
+            fontSize={'SUBTITLE'}
+            color={'WHITE'}>{`${pricePerSqm.toFixed(3)} €/m²`}</Typography>
+        </PriceContainer>
+      </ImageContainer>
+      <InfoContainer>
+        <Typography fontSize={'TITLE'}>{estate.title}</Typography>
+        <InfoBottomContainer>
+          <InfoItem text={`${estate.squareMeters} m²`} icon={faCheckSquare} />
+          <InfoItemSeparator />
+          <InfoItem text={`${estate.bedrooms} bedrooms`} icon={faBed} />
+          <InfoItemSeparator />
+          <InfoItem text={`${estate.bathrooms} bathrooms`} icon={faBath} />
+        </InfoBottomContainer>
+      </InfoContainer>
     </Container>
   );
 };
 
-const Container = styled.View<{
-  expanded: boolean;
-}>`
-  padding: ${MARGIN}px;
-  flex-direction: ${(props) => (props.expanded ? 'column' : 'row')};
+const Container = styled.View`
+  background-color: ${themedColor('WHITE')};
+  margin: 7px 14px;
 `;
 
-const LeftContainer = styled.View<{
-  expanded: boolean;
-}>`
-  margin-bottom: ${(props) => (props.expanded ? `${MARGIN}px` : 0)};
-  margin-right: ${(props) => (props.expanded ? 0 : `${MARGIN}px`)};
+const ImageContainer = styled.View`
+  align-items: center;
+  justify-content: center;
 `;
 
-const RightContainer = styled.View`
-  width: ${SCREEN_WIDTH - 50 - 3 * MARGIN}px;
+const PriceContainer = styled.View`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  flex-direction: row;
+  align-items: center;
+  padding: 15px 20px;
+  width: 100%;
+  background-color: ${themedColor('BLACK_TRANSPARENT')};
 `;
 
-const StyledImage = styled.Image<{
-  expanded: boolean;
-  image: EventImage;
-}>`
-  width: ${(props) =>
-    props.expanded ? `${SCREEN_WIDTH - 2 * MARGIN}px` : '50px'};
-  height: ${(props) =>
-    props.expanded
-      ? `${((SCREEN_WIDTH - 2 * MARGIN) * props.image.height) /
-          props.image.width}px`
-      : '50px'};
+const PriceText = styled(Typography)`
+  font-weight: bold;
+`;
+
+const InfoContainer = styled.View`
+  padding: 15px 20px;
+`;
+
+const InfoBottomContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+`;
+
+const InfoItemSeparator = styled.View`
+  height: 100%;
+  width: 1px;
+  background-color: ${themedColor('BORDER')};
 `;
 
 export default React.memo(ListItem);

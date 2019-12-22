@@ -10,6 +10,7 @@ import themedFontSize, {
 interface OwnProps {
   color?: keyof DefaultTheme['colors'];
   fontSize?: keyof DefaultTheme['fontSizes'];
+  bold?: boolean;
 }
 
 const Typography = styled.Text<OwnProps>`

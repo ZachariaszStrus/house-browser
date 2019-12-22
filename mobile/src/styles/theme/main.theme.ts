@@ -4,28 +4,25 @@ const mainTheme: DefaultTheme = {
   colors: {
     WHITE: '#FFFFFF',
     BLACK: '#000000',
+    BLACK_TRANSPARENT: '#00000077',
     TRANSPARENT: 'transparent',
 
-    PRIMARY: '#00BCD4',
-    PRIMARY_DARK: '#0097A7',
-    PRIMARY_LIGHT: '#B2EBF2',
-
-    SECONDARY: '#DCDCDC',
-    ACCENT: '#03A9F4',
+    PRIMARY: '#722aa0',
+    PRIMARY_LIGHT: '#fbf8fe',
+    ACCENT: '#1cc168',
 
     PRIMARY_TEXT: '#212121',
     SECONDARY_TEXT: '#757575',
 
-    ICON: '#FFFFFF',
     BORDER: '#BDBDBD',
 
-    STATUS_BAR_DEFAULT: '#00BCD4'
+    STATUS_BAR_DEFAULT: 'transparent'
   },
   fontSizes: {
     TITLE_LARGE: 24,
-    TITLE: 18,
-    SUBTITLE: 14,
-    CAPTION: 10
+    TITLE: 22,
+    SUBTITLE: 16,
+    CAPTION: 12
   }
 };
 
