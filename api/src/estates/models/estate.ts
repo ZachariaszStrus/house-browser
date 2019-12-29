@@ -1,5 +1,4 @@
 import {Field, ID, Int, ObjectType} from 'type-graphql';
-import {EstateLocation} from "./estate-location";
 
 @ObjectType()
 export class Estate {

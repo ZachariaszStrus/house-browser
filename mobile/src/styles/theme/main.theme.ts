@@ -1,4 +1,4 @@
-import { DefaultTheme } from 'styled-components';
+import { DefaultTheme } from 'styled-components/native';
 
 const mainTheme: DefaultTheme = {
   colors: {
@@ -8,7 +8,7 @@ const mainTheme: DefaultTheme = {
     TRANSPARENT: 'transparent',
 
     PRIMARY: '#722aa0',
-    PRIMARY_LIGHT: '#fbf8fe',
+    PRIMARY_LIGHT: '#f6f0fc',
     ACCENT: '#1cc168',
 
     PRIMARY_TEXT: '#212121',

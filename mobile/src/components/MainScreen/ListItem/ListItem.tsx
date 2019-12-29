@@ -1,8 +1,7 @@
-import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import styled from 'styled-components/native';
 import Typography from '../../shared/Typography';
 import { Estate } from '../../../../../api/src/estates/models/estate';
-import { Dimensions, Image, ImageStyle, StyleProp } from 'react-native';
 import themedColor from '../../../styles/theme/themedColor';
 import InfoItem from './InfoItem/InfoItem';
 import {
@@ -10,56 +9,21 @@ import {
   faBed,
   faCheckSquare
 } from '@fortawesome/free-solid-svg-icons';
-
-const IMAGE_PLACEHOLDER = require('../../../../assets/photo-placeholder.png');
-const SCREEN = Dimensions.get('screen');
+import { Card } from 'native-base';
 
 interface OwnProps {
   estate: Estate;
 }
 
 const ListItem: FunctionComponent<OwnProps> = ({ estate }) => {
-  const [imageRatio, setImageRatio] = useState<number | null>(null);
-
-  useEffect(() => {
-    Image.getSize(
-      estate.image,
-      (srcWidth, srcHeight) => {
-        setImageRatio(srcWidth / srcHeight);
-      },
-      () => {}
-    );
-  }, [estate.image]);
-
   const pricePerSqm = useMemo(() => estate.price / estate.price, [
     estate.price
   ]);
 
-  const imageStyle = useMemo<StyleProp<ImageStyle>>(
-    () =>
-      imageRatio
-        ? {
-            width: '100%',
-            minHeight: 100,
-            maxHeight: SCREEN.width,
-            aspectRatio: imageRatio || 1
-          }
-        : {
-            width: SCREEN.width,
-            height: SCREEN.width / 2
-          },
-    [imageRatio]
-  );
-
-  const imageSource = useMemo(
-    () => (imageRatio ? { uri: estate.image } : IMAGE_PLACEHOLDER),
-    [estate.image, imageRatio]
-  );
-
   return (
     <Container>
       <ImageContainer>
-        <Image style={imageStyle} source={imageSource} />
+        <StyledImage source={{ uri: estate.image }} />
         <PriceContainer>
           <PriceText
             fontSize={'TITLE_LARGE'}
@@ -77,16 +41,16 @@ const ListItem: FunctionComponent<OwnProps> = ({ estate }) => {
         <InfoBottomContainer>
           <InfoItem text={`${estate.squareMeters} m²`} icon={faCheckSquare} />
           <InfoItemSeparator />
-          <InfoItem text={`${estate.bedrooms} bedrooms`} icon={faBed} />
+          <InfoItem text={`${estate.bedrooms} bdrm`} icon={faBed} />
           <InfoItemSeparator />
-          <InfoItem text={`${estate.bathrooms} bathrooms`} icon={faBath} />
+          <InfoItem text={`${estate.bathrooms} bth`} icon={faBath} />
         </InfoBottomContainer>
       </InfoContainer>
     </Container>
   );
 };
 
-const Container = styled.View`
+const Container = styled(Card)`
   background-color: ${themedColor('WHITE')};
   margin: 7px 14px;
 `;
@@ -94,6 +58,12 @@ const Container = styled.View`
 const ImageContainer = styled.View`
   align-items: center;
   justify-content: center;
+`;
+
+const StyledImage = styled.Image`
+  width: 100%;
+  min-height: 100px;
+  aspect-ratio: ${16 / 9};
 `;
 
 const PriceContainer = styled.View`

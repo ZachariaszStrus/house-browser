@@ -26,8 +26,10 @@ const InfoItem: FunctionComponent<OwnProps> = ({ text, icon }) => {
 };
 
 const Container = styled.View`
+  flex: 1;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 `;
 
 export default InfoItem;

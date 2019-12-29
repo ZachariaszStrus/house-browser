@@ -1,5 +1,5 @@
 import {Field, InputType, Int} from 'type-graphql';
-import {EstateLocation} from "./estate-location";
+import {EstateLocation} from './estate-location';
 
 @InputType()
 export class EstateInput {

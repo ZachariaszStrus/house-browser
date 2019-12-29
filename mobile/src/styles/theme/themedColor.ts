@@ -1,4 +1,5 @@
-import { DefaultTheme, ThemedColor } from 'styled-components';
+import { DefaultTheme, ThemedColor } from 'styled-components/native';
+import mainTheme from './main.theme';
 
 enum THEMED_COLOR_TYPES {
   WHITE = 'WHITE',
@@ -16,7 +17,10 @@ enum THEMED_COLOR_TYPES {
 
 const themedColor = (color: ThemedColor, opacity?: string) => (props: {
   theme: DefaultTheme;
-}) => props.theme.colors[color] + (opacity != null ? opacity : '');
+}) => {
+  const colors = props.theme.colors || mainTheme.colors;
+  return colors[color] + (opacity != null ? opacity : '');
+};
 
 export { THEMED_COLOR_TYPES };
 export default themedColor;

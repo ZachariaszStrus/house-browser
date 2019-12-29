@@ -3,14 +3,19 @@ import { Estate } from './models/estate';
 import { EstateService } from './estate.service';
 import { EstateInput } from './models/estate-input';
 import {generateEstates} from '../utils/generate-estates';
+import {EstateFilter} from './models/estate-filter';
 
 @Resolver((of) => Estate)
 export class EstateResolver {
   constructor(private estateService: EstateService) {}
 
   @Query((returns) => [Estate])
-  async estates(): Promise<Estate[]> {
-    return this.estateService.findAll();
+  async estates(
+    @Args({ name: 'filter', type: () => EstateFilter, nullable: true }) filter?: EstateFilter,
+    @Args({ name: 'city', type: () => String, nullable: true }) city?: string,
+  ): Promise<Estate[]> {
+    console.log(filter, city);
+    return this.estateService.findAll(filter);
   }
 
   @Mutation((returns) => Estate)

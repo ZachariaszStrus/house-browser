@@ -1,10 +1,12 @@
-import React, { FunctionComponent, useContext, useMemo } from 'react';
-import styled, { ThemeContext } from 'styled-components/native';
-import { Button, Picker } from 'native-base';
+import React, { FunctionComponent, useCallback, useState } from 'react';
+import styled from 'styled-components/native';
+import { Button } from 'native-base';
 import Typography from '../../shared/Typography';
 import themedColor from '../../../styles/theme/themedColor';
-import { TextStyle } from 'react-native';
 import Separator from '../../shared/Separator';
+import FilterSection from './FilterSection/FilterSection';
+import ButtonSelect from './ButtonSelect/ButtonSelect';
+import { EstateFilter } from '../../../../../api/src/estates/models/estate-filter';
 
 const PRICE_OPTIONS = [
   {
@@ -26,118 +28,150 @@ const PRICE_OPTIONS = [
   {
     label: '500 000',
     value: 500000
+  },
+  {
+    label: '600 000',
+    value: 600000
+  },
+  {
+    label: '750 000',
+    value: 750000
+  },
+  {
+    label: '1 000 000',
+    value: 1000000
+  }
+];
+
+const SIZE_OPTIONS = [
+  {
+    label: '20 m²',
+    value: 20
+  },
+  {
+    label: '30 m²',
+    value: 30
+  },
+  {
+    label: '40 m²',
+    value: 40
+  },
+  {
+    label: '50 m²',
+    value: 50
+  },
+  {
+    label: '70 m²',
+    value: 70
+  },
+  {
+    label: '100 m²',
+    value: 100
+  },
+  {
+    label: '150 m²',
+    value: 150
+  }
+];
+
+const BEDROOM_OPTIONS = [
+  {
+    label: '1',
+    value: 1
+  },
+  {
+    label: '2',
+    value: 2
+  },
+  {
+    label: '3',
+    value: 3
+  },
+  {
+    label: '4',
+    value: 4
+  },
+  {
+    label: '5',
+    value: 5
   }
 ];
 
 interface OwnProps {
   filterOpened: boolean;
+  onFilterSubmit(filters: EstateFilter): void;
 }
 
-const Filters: FunctionComponent<OwnProps> = ({ filterOpened }) => {
-  const theme = useContext(ThemeContext);
+const Filters: FunctionComponent<OwnProps> = ({
+  filterOpened,
+  onFilterSubmit
+}) => {
+  const [minPrice, setMinPrice] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const [minSize, setMinSize] = useState<number | null>(null);
+  const [maxSize, setMaxSize] = useState<number | null>(null);
+  const [bedrooms, setBedrooms] = useState<number[] | null>(null);
 
-  const pickerStyle = useMemo<TextStyle>(
-    () => ({
-      color: theme.colors.SECONDARY_TEXT,
-      fontSize: theme.fontSizes.SUBTITLE
-    }),
-    [theme.colors.SECONDARY_TEXT, theme.fontSizes.SUBTITLE]
-  );
+  const onSearchPress = useCallback(() => {
+    onFilterSubmit({
+      minPrice,
+      maxPrice,
+      minSize,
+      maxSize,
+      bedrooms
+    });
+  }, [bedrooms, maxPrice, maxSize, minPrice, minSize, onFilterSubmit]);
 
   return (
     filterOpened && (
       <Container>
         <ContentContainer>
-          <LabelContainer>
-            <Typography>{'Price'}</Typography>
-          </LabelContainer>
-          <PickersContainer>
-            <Picker
-              mode="dialog"
-              selectedValue={() => {}}
-              onValueChange={() => {}}
-              style={pickerStyle}>
-              <Picker.Item label="Min price" value={null} />
-              {PRICE_OPTIONS.map((item) => (
-                <Picker.Item
-                  key={item.label}
-                  label={item.label}
-                  value={item.value}
-                />
-              ))}
-            </Picker>
-            <Picker
-              mode="dialog"
-              selectedValue={() => {}}
-              onValueChange={() => {}}
-              style={pickerStyle}>
-              <Picker.Item label="Max price" value={null} />
-              {PRICE_OPTIONS.map((item) => (
-                <Picker.Item
-                  key={item.label}
-                  label={item.label}
-                  value={item.value}
-                />
-              ))}
-            </Picker>
-          </PickersContainer>
+          <FilterSection
+            label={'Price'}
+            sections={[
+              {
+                placeholder: 'Min price',
+                selectedValue: minPrice,
+                onValueChange: setMinPrice,
+                options: PRICE_OPTIONS
+              },
+              {
+                placeholder: 'Max price',
+                selectedValue: maxPrice,
+                onValueChange: setMaxPrice,
+                options: PRICE_OPTIONS
+              }
+            ]}
+          />
+          <Separator />
+          <FilterSection
+            label={'Size'}
+            sections={[
+              {
+                placeholder: 'Min size',
+                selectedValue: minSize,
+                onValueChange: setMinSize,
+                options: SIZE_OPTIONS
+              },
+              {
+                placeholder: 'Max size',
+                selectedValue: maxSize,
+                onValueChange: setMaxSize,
+                options: SIZE_OPTIONS
+              }
+            ]}
+          />
           <Separator />
 
-          <LabelContainer>
-            <Typography>{'Size'}</Typography>
-          </LabelContainer>
-          <PickersContainer>
-            <Picker
-              mode="dialog"
-              selectedValue={() => {}}
-              onValueChange={() => {}}
-              style={pickerStyle}>
-              <Picker.Item label="Min size" value={null} />
-              {PRICE_OPTIONS.map((item) => (
-                <Picker.Item
-                  key={item.label}
-                  label={item.label}
-                  value={item.value}
-                />
-              ))}
-            </Picker>
-            <Picker
-              mode="dialog"
-              selectedValue={() => {}}
-              onValueChange={() => {}}
-              style={pickerStyle}>
-              <Picker.Item label="Max size" value={null} />
-              {PRICE_OPTIONS.map((item) => (
-                <Picker.Item
-                  key={item.label}
-                  label={item.label}
-                  value={item.value}
-                />
-              ))}
-            </Picker>
-          </PickersContainer>
-          <Separator />
-
-          <LabelContainer>
-            <Typography>{'Rooms'}</Typography>
-          </LabelContainer>
-          <Picker
-            mode="dialog"
-            selectedValue={() => {}}
-            onValueChange={() => {}}
-            style={pickerStyle}>
-            <Picker.Item label="Any" value={null} />
-            {PRICE_OPTIONS.map((item) => (
-              <Picker.Item
-                key={item.label}
-                label={item.label}
-                value={item.value}
-              />
-            ))}
-          </Picker>
+          <ButtonSelect
+            label={'Rooms'}
+            selectedValues={bedrooms}
+            onValueChange={setBedrooms}
+            options={BEDROOM_OPTIONS}
+          />
         </ContentContainer>
 
-        <StyledButton full>
+        <StyledButton full onPress={onSearchPress}>
           <BoldText color={'WHITE'} fontSize={'SUBTITLE'}>
             {'SEARCH'}
           </BoldText>
@@ -153,16 +187,6 @@ const Container = styled.View`
 
 const ContentContainer = styled.View`
   padding: 14px;
-`;
-
-const LabelContainer = styled.View`
-  margin-left: 7px;
-  margin-top: 20px;
-`;
-
-const PickersContainer = styled.View`
-  flex-direction: row;
-  margin-bottom: 5px;
 `;
 
 const StyledButton = styled(Button)`

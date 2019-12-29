@@ -1,24 +1,39 @@
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext, useState } from 'react';
 import styled, { ThemeContext } from 'styled-components/native';
 import { Button, Input, Item } from 'native-base';
 import themedColor from '../../../styles/theme/themedColor';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faFilter, faSearch } from '@fortawesome/free-solid-svg-icons';
 import Margin from '../../shared/Margin';
+import { Keyboard } from 'react-native';
 
 interface OwnProps {
   onFilterClick(): void;
+  onSearch(value: string): void;
 }
 
-const SearchBar: FunctionComponent<OwnProps> = ({ onFilterClick }) => {
+const SearchBar: FunctionComponent<OwnProps> = ({
+  onFilterClick,
+  onSearch
+}) => {
   const theme = useContext(ThemeContext);
+  const [searchText, setSearchText] = useState('');
 
   return (
     <Container>
       <InputContainer>
         <Item>
-          <Input placeholder={'City'} />
-          <IconButton transparent>
+          <Input
+            placeholder={'City'}
+            value={searchText}
+            onChangeText={setSearchText}
+          />
+          <IconButton
+            transparent
+            onPress={() => {
+              onSearch(searchText);
+              Keyboard.dismiss();
+            }}>
             <FontAwesomeIcon icon={faSearch} color={theme.colors.PRIMARY} />
           </IconButton>
         </Item>

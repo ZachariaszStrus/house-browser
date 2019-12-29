@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { IEstate } from './interfaces/estate.interface';
 import { EstateInput } from './models/estate-input';
 import { Estate } from './models/estate';
+import { EstateFilter } from './models/estate-filter';
 
 @Injectable()
 export class EstateService {
@@ -16,8 +17,40 @@ export class EstateService {
     return await createdEstate.save();
   }
 
-  async findAll(): Promise<Estate[]> {
-    return await this.estateModel.find().exec();
+  async findAll(filter?: EstateFilter): Promise<Estate[]> {
+    const query = {};
+
+    if (filter) {
+      if (filter.minPrice || filter.maxPrice) {
+        query['price'] = {};
+        if (filter.minPrice) {
+          query['price']['$gte'] = filter.minPrice;
+        }
+
+        if (filter.maxPrice) {
+          query['price']['$lte'] = filter.maxPrice;
+        }
+      }
+
+      if (filter.minSize || filter.maxSize) {
+        query['squareMeters'] = {};
+        if (filter.minSize) {
+          query['squareMeters']['$gte'] = filter.minSize;
+        }
+
+        if (filter.maxSize) {
+          query['squareMeters']['$lte'] = filter.maxSize;
+        }
+
+      }
+
+      if (filter.bedrooms) {
+        query['bedrooms'] = {};
+        query['bedrooms']['$in'] = filter.bedrooms;
+      }
+    }
+
+    return this.estateModel.find(query);
   }
 
   async delete(id: string): Promise<Estate> {
@@ -29,7 +62,7 @@ export class EstateService {
   }
 
   async deleteAll(): Promise<number> {
-    const result = await this.estateModel.remove({});
+    const result = await this.estateModel.remove({}).exec();
     return result.deletedCount;
   }
 

@@ -10,7 +10,7 @@ export const generateEstates = (count: number): EstateInput[] => range(count).ma
   squareMeters: chance.integer({ min: 15, max: 200 }),
   bedrooms: chance.integer({ min: 1, max: 5 }),
   bathrooms: chance.integer({ min: 1, max: 3 }),
-  image: `http://lorempixel.com/${160 + i * 2}/${90 + i}/city/`,
+  image: `http://lorempixel.com/${800 + i * 2}/${450 + i}/city/`,
   location: {
     longitude: 10,
     latitude: 20,

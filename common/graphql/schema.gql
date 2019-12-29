@@ -13,6 +13,14 @@ type Estate {
   image: String!
 }
 
+input EstateFilter {
+  minPrice: Int
+  maxPrice: Int
+  minSize: Int
+  maxSize: Int
+  bedrooms: [Int!]
+}
+
 input EstateInput {
   title: String!
   price: Int!
@@ -36,5 +44,5 @@ type Mutation {
 }
 
 type Query {
-  estates: [Estate!]!
+  estates(city: String, filter: EstateFilter): [Estate!]!
 }

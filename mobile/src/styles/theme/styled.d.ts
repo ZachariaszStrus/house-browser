@@ -1,5 +1,5 @@
 import 'styled-components';
-import { DefaultTheme, ThemedColor } from 'styled-components';
+import { DefaultTheme } from 'styled-components/native';
 
 import { THEMED_COLOR_TYPES } from './themedColor';
 import { THEMED_FONT_SIZE_TYPES } from './themedFontSize';
