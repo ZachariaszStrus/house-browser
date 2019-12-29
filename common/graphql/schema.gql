@@ -11,6 +11,7 @@ type Estate {
   bedrooms: Int!
   bathrooms: Int!
   image: String!
+  location: EstateLocation!
 }
 
 input EstateFilter {
@@ -28,12 +29,17 @@ input EstateInput {
   bedrooms: Int!
   bathrooms: Int!
   image: String!
-  location: EstateLocation!
+  location: EstateLocationInput!
 }
 
-input EstateLocation {
-  latitude: Float!
-  longitude: Float!
+type EstateLocation {
+  type: String!
+  coordinates: [Float!]!
+}
+
+input EstateLocationInput {
+  type: String!
+  coordinates: [Float!]!
 }
 
 type Mutation {

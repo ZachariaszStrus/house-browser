@@ -14,8 +14,7 @@ export class EstateResolver {
     @Args({ name: 'filter', type: () => EstateFilter, nullable: true }) filter?: EstateFilter,
     @Args({ name: 'city', type: () => String, nullable: true }) city?: string,
   ): Promise<Estate[]> {
-    console.log(filter, city);
-    return this.estateService.findAll(filter);
+    return this.estateService.findAll(filter, city);
   }
 
   @Mutation((returns) => Estate)

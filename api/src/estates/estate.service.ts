@@ -5,11 +5,13 @@ import { IEstate } from './interfaces/estate.interface';
 import { EstateInput } from './models/estate-input';
 import { Estate } from './models/estate';
 import { EstateFilter } from './models/estate-filter';
+import { GoogleMapsService } from '../common/google-maps.service';
 
 @Injectable()
 export class EstateService {
   constructor(
     @InjectModel('Estate') private readonly estateModel: Model<IEstate>,
+    private googleMapsService: GoogleMapsService,
   ) {}
 
   async create(estates: EstateInput): Promise<Estate> {
@@ -17,7 +19,7 @@ export class EstateService {
     return await createdEstate.save();
   }
 
-  async findAll(filter?: EstateFilter): Promise<Estate[]> {
+  async findAll(filter?: EstateFilter, city?: string): Promise<Estate[]> {
     const query = {};
 
     if (filter) {
@@ -45,8 +47,24 @@ export class EstateService {
       }
 
       if (filter.bedrooms) {
-        query['bedrooms'] = {};
-        query['bedrooms']['$in'] = filter.bedrooms;
+        query['bedrooms'] = {
+          $in: filter.bedrooms,
+        };
+      }
+    }
+
+    if (city) {
+      const coords = await this.googleMapsService.getCoords(city);
+      if (coords) {
+        query['location'] = {
+          $nearSphere: {
+            $geometry: {
+              type: 'Point' ,
+              coordinates: coords,
+            },
+            $minDistance: 1,
+          },
+        };
       }
     }
 

@@ -1,5 +1,5 @@
 import {Field, InputType, Int} from 'type-graphql';
-import {EstateLocation} from './estate-location';
+import {EstateLocationInput} from './estate-location-input';
 
 @InputType()
 export class EstateInput {
@@ -22,6 +22,6 @@ export class EstateInput {
   @Field(type => String)
   readonly image: string;
 
-  @Field(type => EstateLocation)
-  readonly location: EstateLocation;
+  @Field(type => EstateLocationInput)
+  readonly location: EstateLocationInput;
 }

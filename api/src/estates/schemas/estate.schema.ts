@@ -8,7 +8,12 @@ export const EstateSchema = new mongoose.Schema({
   bathrooms: Number,
   image: String,
   location: {
-    latitude: Number,
-    longitude: Number,
+    type: {
+      type: String,
+      enum: ['Point'],
+    },
+    coordinates: [Number],
   },
 });
+
+EstateSchema.index({ location: '2dsphere' });

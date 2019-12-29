@@ -16,8 +16,9 @@ interface OwnProps {
 }
 
 const ListItem: FunctionComponent<OwnProps> = ({ estate }) => {
-  const pricePerSqm = useMemo(() => estate.price / estate.price, [
-    estate.price
+  const pricePerSqm = useMemo(() => estate.price / estate.squareMeters, [
+    estate.price,
+    estate.squareMeters
   ]);
 
   return (

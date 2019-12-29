@@ -8,7 +8,7 @@ export interface IEstate extends Document {
   readonly bathrooms: number;
   readonly image: string;
   readonly location: {
-    latitude: number,
-    longitude: number,
+    type: string,
+    coordinates: number[],
   };
 }
