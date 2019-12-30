@@ -14,8 +14,8 @@ export class EstateService {
     private googleMapsService: GoogleMapsService,
   ) {}
 
-  async create(estates: EstateInput): Promise<Estate> {
-    const createdEstate = new this.estateModel(estates);
+  async create(estate: EstateInput): Promise<Estate> {
+    const createdEstate = new this.estateModel(estate);
     return await createdEstate.save();
   }
 

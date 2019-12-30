@@ -28,8 +28,6 @@ function FilterSection<T>({ label, sections }: OwnProps<T>) {
     [theme.colors.SECONDARY_TEXT, theme.fontSizes.SUBTITLE]
   );
 
-  console.log(sections);
-
   return (
     <>
       <LabelContainer>
@@ -42,20 +40,21 @@ function FilterSection<T>({ label, sections }: OwnProps<T>) {
             mode="dialog"
             placeholder={section.placeholder}
             selectedValue={section.selectedValue}
-            onValueChange={(_, index) => {
+            onValueChange={(value, index) => {
               // workaround, the method didnt return value as first arg, but label
-              if (index === 0 && Platform.OS !== 'ios')
-                section.onValueChange(null);
-              else section.onValueChange(section.options[index - 1].value);
+              if (Platform.OS === 'ios') {
+                section.onValueChange(value);
+              } else {
+                if (index === 0) section.onValueChange(null);
+                else section.onValueChange(section.options[index - 1].value);
+              }
             }}
             style={pickerStyle}>
-            {Platform.OS !== 'ios' && (
-              <Picker.Item
-                key={'None'}
-                label={section.placeholder}
-                value={null}
-              />
-            )}
+            <Picker.Item
+              key={'None'}
+              label={section.placeholder}
+              value={null}
+            />
             {section.options.map((item) => (
               <Picker.Item
                 key={item.label}

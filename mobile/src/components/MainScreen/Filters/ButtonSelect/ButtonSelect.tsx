@@ -3,15 +3,18 @@ import styled from 'styled-components/native';
 import { Button } from 'native-base';
 import themedColor from '../../../../styles/theme/themedColor';
 import Typography from '../../../shared/Typography';
+import buttonSelectUtils from './button-select.utils';
+
+export interface ButtonSelectOption<T> {
+  label: string;
+  value: T;
+}
 
 interface OwnProps<T> {
   label: string;
   selectedValues: T[] | null;
   onValueChange(value: T[] | null): void;
-  options: {
-    label: string;
-    value: T;
-  }[];
+  options: ButtonSelectOption<T>[];
 }
 
 function ButtonSelect<T>({
@@ -21,37 +24,25 @@ function ButtonSelect<T>({
   options
 }: OwnProps<T>) {
   const isSelected = useCallback(
-    (option: { label: string; value: T }) =>
-      selectedValues && selectedValues.indexOf(option.value) !== -1,
+    (option: ButtonSelectOption<T>) =>
+      buttonSelectUtils.isSelected(option, selectedValues),
     [selectedValues]
   );
 
   const onPress = useCallback(
-    (option: { label: string; value: T }) => {
-      const wasSelected = isSelected(option);
-      if (wasSelected) {
-        onValueChange(
-          selectedValues
-            ? selectedValues.filter((value) => value !== option.value)
-            : null
-        );
-      } else {
-        onValueChange(
-          selectedValues ? [...selectedValues, option.value] : [option.value]
-        );
-      }
-    },
-    [isSelected, onValueChange, selectedValues]
+    (option: ButtonSelectOption<T>) =>
+      buttonSelectUtils.onPress(option, selectedValues, onValueChange),
+    [onValueChange, selectedValues]
   );
 
   const renderButton = useCallback(
-    (option: { label: string; value: T }) => {
+    (option: ButtonSelectOption<T>) => {
       const selected = isSelected(option);
 
       return (
         <StyledButton
           onPress={() => onPress(option)}
-          key={option.value}
+          key={option.label}
           selected={selected}>
           <BoldText
             color={selected ? 'WHITE' : 'SECONDARY_TEXT'}

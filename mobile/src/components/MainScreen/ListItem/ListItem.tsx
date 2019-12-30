@@ -10,6 +10,9 @@ import {
   faCheckSquare
 } from '@fortawesome/free-solid-svg-icons';
 import { Card } from 'native-base';
+import { Dimensions } from 'react-native';
+
+const SCREEN = Dimensions.get('screen');
 
 interface OwnProps {
   estate: Estate;
@@ -24,7 +27,7 @@ const ListItem: FunctionComponent<OwnProps> = ({ estate }) => {
   return (
     <Container>
       <ImageContainer>
-        <StyledImage source={{ uri: estate.image }} />
+        <StyledImage source={{ uri: estate.image }} resizeMode={'cover'} />
         <PriceContainer>
           <PriceText
             fontSize={'TITLE_LARGE'}
@@ -63,8 +66,7 @@ const ImageContainer = styled.View`
 
 const StyledImage = styled.Image`
   width: 100%;
-  min-height: 100px;
-  aspect-ratio: ${16 / 9};
+  height: ${SCREEN.height * 0.3};
 `;
 
 const PriceContainer = styled.View`

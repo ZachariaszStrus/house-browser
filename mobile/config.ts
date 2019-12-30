@@ -1,1 +1,1 @@
-export const apiUrl = 'http://192.168.0.80:3000/graphql';
+export const apiUrl = '<INSERT_YOUR_API_URL_HERE>';
