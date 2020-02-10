@@ -1,4 +1,4 @@
-import { DefaultTheme, ThemedColor } from 'styled-components/native';
+import { DefaultTheme } from 'styled-components/native';
 import mainTheme from './main.theme';
 
 enum THEMED_COLOR_TYPES {
@@ -15,9 +15,10 @@ enum THEMED_COLOR_TYPES {
   STATUS_BAR_DEFAULT = 'STATUS_BAR_DEFAULT'
 }
 
-const themedColor = (color: ThemedColor, opacity?: string) => (props: {
-  theme: DefaultTheme;
-}) => {
+const themedColor = (
+  color: keyof typeof THEMED_COLOR_TYPES,
+  opacity?: string
+) => (props: { theme: DefaultTheme }) => {
   const colors = props.theme.colors || mainTheme.colors;
   return colors[color] + (opacity != null ? opacity : '');
 };
